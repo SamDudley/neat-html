@@ -2,7 +2,7 @@ from textwrap import dedent
 
 import pytest
 
-from python_html_dsl import h, render
+from python_html_dsl import h, render, safe
 
 
 def test_single_tag() -> None:
@@ -50,6 +50,28 @@ def test_style_not_dict() -> None:
 def test_style_empty_dict() -> None:
     html = render(h("div", {"style": {}}))
     assert html == '<div style="">\n</div>\n'
+
+
+def test_unsafe_text() -> None:
+    html = render(h("div", safe("<script>alert(1)</script>")))
+    assert html == dedent(
+        """\
+        <div>
+            <script>alert(1)</script>
+        </div>
+        """
+    )
+
+
+def test_safe_text() -> None:
+    html = render(h("div", "<script>alert(1)</script>"))
+    assert html == dedent(
+        """\
+        <div>
+            &lt;script&gt;alert(1)&lt;/script&gt;
+        </div>
+        """
+    )
 
 
 class TestFormatting:

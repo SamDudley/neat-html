@@ -1,4 +1,5 @@
 from collections import deque
+from html import escape
 from typing import TYPE_CHECKING, Any
 
 from .tokens import ClosingTag, Content, OpeningTag, Token
@@ -78,7 +79,9 @@ class Compiler:
             self.newline()
             self.indent()
 
-        self.append(content.text)
+        text = escape(content.text) if not content.safe else content.text
+
+        self.append(text)
 
     def visit_ClosingTag(self, tag: ClosingTag) -> None:
         if is_block_tag(tag.name):

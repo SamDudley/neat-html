@@ -18,7 +18,7 @@ class Tokenizer:
 
             if isinstance(node, TextNode):
                 self.nodes.pop()
-                self.add_token(Content(node.text))
+                self.add_token(Content(node.text, safe=node.safe))
 
             else:  # Node
                 if node not in self.open_nodes:

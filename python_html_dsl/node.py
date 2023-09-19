@@ -26,8 +26,9 @@ class Node:
 
 
 class TextNode:
-    def __init__(self, text: str):
+    def __init__(self, text: str, *, safe: bool = False):
         self.text = text
+        self.safe = safe
 
 
 NodeType = Node | TextNode

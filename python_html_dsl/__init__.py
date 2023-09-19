@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from typing import Any, Union, overload
 
 from .compiler import Compiler
-from .node import Node, TextNode
+from .node import Node, NodeType, TextNode
 from .tokenizer import Tokenizer
 from .types import Children, HtmlAttributes
 
@@ -29,7 +29,7 @@ def h(
 @overload
 def h(
     tag: str,
-    children: Sequence[Node | str] | Node | str,
+    children: Sequence[NodeType | str] | NodeType | str,
     /,
 ) -> Node:
     ...  # pragma: no cover
@@ -39,7 +39,7 @@ def h(
 def h(
     tag: str,
     attrs: HtmlAttributes,
-    children: Sequence[Node | str] | Node | str,
+    children: Sequence[NodeType | str] | NodeType | str,
     /,
 ) -> Node:
     ...  # pragma: no cover
@@ -66,6 +66,10 @@ def render(node: Node) -> str:
     return Compiler().compile(tokens)
 
 
+def safe(text: str) -> TextNode:
+    return TextNode(text, safe=True)
+
+
 def _handle_args(
     *args: Any,
 ) -> tuple[str, "HtmlAttributes", list[Union["Node", str]] | str]:
@@ -76,13 +80,13 @@ def _handle_args(
             return args[0], args[1], []
         case [str(), list()]:
             return args[0], {}, args[1]
-        case [str(), Node()]:
+        case [str(), Node() | TextNode()]:
             return args[0], {}, [args[1]]
         case [str(), str()]:
             return args[0], {}, [args[1]]
         case [str(), dict(), list()]:
             return args[0], args[1], args[2]
-        case [str(), dict(), Node()]:
+        case [str(), dict(), Node() | TextNode()]:
             return args[0], args[1], [args[2]]
         case [str(), dict(), str()]:
             return args[0], args[1], [args[2]]
