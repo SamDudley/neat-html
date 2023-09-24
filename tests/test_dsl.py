@@ -74,6 +74,16 @@ def test_safe_text() -> None:
     )
 
 
+def test_empty_string_boolean_attribute() -> None:
+    html = render(h("input", {"disabled": ""}))
+    assert html == "<input disabled>\n"
+
+
+def test_can_produce_doctype_tag() -> None:
+    html = render(h("!DOCTYPE", {"html": ""}))
+    assert html == "<!DOCTYPE html>\n"
+
+
 class TestFormatting:
     def test_block(self) -> None:
         html = render(h("div", ["hello"]))

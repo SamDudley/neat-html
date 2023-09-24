@@ -101,6 +101,9 @@ class Compiler:
 
     @classmethod
     def render_attr(cls, key: str, value: Any) -> str:
+        if value == "":
+            return key
+
         if key == "style":
             if not isinstance(value, dict):
                 raise ValueError("A style value must be a dict")

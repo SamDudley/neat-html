@@ -135,6 +135,7 @@ all_tags: set[str] = {
 }
 
 self_closing_tags: set[str] = {
+    "!DOCTYPE",
     "area",
     "base",
     "br",
