@@ -14,7 +14,7 @@ check:
 	poetry run mypy .
 
 test:
-	poetry run pytest --cov=python_html_dsl
+	poetry run pytest --cov=python_html_dsl --cov-fail-under=100
 
 coverage:
 	poetry run coverage html
