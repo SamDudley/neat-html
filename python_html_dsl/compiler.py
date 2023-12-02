@@ -3,7 +3,7 @@ from html import escape
 from typing import TYPE_CHECKING, Any
 
 from .tokens import ClosingTag, Content, OpeningTag, Token
-from .utils import is_block_tag, is_inline_tag, is_self_closing_tag
+from .utils import is_block_tag, is_self_closing_tag
 
 if TYPE_CHECKING:
     from .types import HtmlAttributes
@@ -22,9 +22,6 @@ class Compiler:
             getattr(self, f"visit_{self.token.__class__.__name__}")(self.token)
             self.eat()
 
-        if self.code[0] == "\n":
-            self.code.popleft()
-
         if self.code[-1] != "\n":
             self.newline()
 
@@ -35,12 +32,6 @@ class Compiler:
             self.token = self.tokens.popleft()
         except IndexError:
             self.token = None
-
-    def peek(self) -> Token | None:
-        try:
-            return self.tokens[0]
-        except IndexError:
-            return None
 
     def append(self, fragment: str) -> None:
         self.code.append(fragment)
@@ -54,12 +45,6 @@ class Compiler:
     def in_block(self) -> bool:
         try:
             return is_block_tag(self.stack[-1])
-        except IndexError:
-            return False
-
-    def in_inline(self) -> bool:
-        try:
-            return is_inline_tag(self.stack[-1])
         except IndexError:
             return False
 

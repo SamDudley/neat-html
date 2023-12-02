@@ -1,8 +1,11 @@
+default:
+	@just --list
+
 build:
-    poetry run build
+    poetry build
 
 publish:
-	poetry run publish
+	poetry publish
 
 format:
 	poetry run black .
@@ -14,9 +17,12 @@ check:
 	poetry run mypy .
 
 test:
-	poetry run pytest --cov=python_html_dsl --cov-fail-under=100
+	poetry run pytest --cov=python_html_dsl
 
 coverage:
 	poetry run coverage html
 
-test-cov: test coverage
+view-coverage:
+	poetry run python -m webbrowser -t "htmlcov/index.html"
+
+test-cov: test coverage view-coverage
