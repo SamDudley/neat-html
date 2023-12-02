@@ -1,12 +1,12 @@
 from collections.abc import Sequence
-from typing import Any, Union, overload
+from typing import Any, overload
 
 from .compiler import Compiler
 from .node import Node, NodeType, TextNode
 from .tokenizer import Tokenizer
 from .types import Children, HtmlAttributes
 
-__all__ = ["h", "render", "Node"]
+__all__ = ["h", "render", "safe", "Node"]
 
 
 @overload
@@ -72,7 +72,7 @@ def safe(text: str) -> TextNode:
 
 def _handle_args(
     *args: Any,
-) -> tuple[str, "HtmlAttributes", list[Union["Node", str]] | str]:
+) -> tuple[str, "HtmlAttributes", list["Node" | str] | str]:
     match args:
         case [str()]:
             return args[0], {}, []
