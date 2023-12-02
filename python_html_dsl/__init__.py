@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from typing import Any, overload, Union
+from typing import Any, Union, overload
 
 from .compiler import Compiler
 from .node import Node, NodeType, TextNode

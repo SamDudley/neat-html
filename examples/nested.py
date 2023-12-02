@@ -1,6 +1,5 @@
 from python_html_dsl import h, render
 
-
 root = h("span", "root")
 
 element = root
