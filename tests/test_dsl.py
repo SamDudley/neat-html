@@ -179,3 +179,13 @@ class TestFormatting:
             </div>
             """
         )
+
+    def test_inline_then_text(self) -> None:
+        html = h("div", [h("span", "foo"), "bar"])
+        assert render(html) == dedent(
+            """\
+            <div>
+                <span>foo</span>bar
+            </div>
+            """
+        )
