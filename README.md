@@ -7,9 +7,10 @@ Features:
 - small API to learn (2 functions)
 - fully typed API
 - produces formatted HTML
-- writting in pure python
+- written in pure python
 - zero dependencies
 - comprehensive test suite
+- no recursion
 
 Install using pip:
 
@@ -21,10 +22,12 @@ Take it for a spin:
 
 ```python
 >>> from python_html_dsl import h, render
->>> greeting = h("strong", {"style", {"color": "green"}}, "Hello")
+>>> greeting = h("strong", {"style": {"color": "green"}}, "Hello")
 >>> html = h("p", {"id": "foo"}, [greeting, ", World!"])
 >>> print(render(html))
 <p id="foo">
-    <strong style="color: green;">Hello</strong> World!
+    <strong style="color: green">Hello</strong>
+    , World!
 </p>
+
 ```
