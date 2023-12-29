@@ -16,8 +16,8 @@ check:
 	poetry run ruff .
 	poetry run mypy .
 
-test:
-	poetry run pytest --cov=python_html_dsl
+test *args:
+	poetry run pytest --cov=python_html_dsl {{args}}
 
 coverage:
 	poetry run coverage html

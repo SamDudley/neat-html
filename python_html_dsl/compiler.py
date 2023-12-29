@@ -3,7 +3,6 @@ from html import escape
 from typing import TYPE_CHECKING, Any
 
 from .tokens import ClosingTag, Content, OpeningTag, Token
-from .utils import is_block_tag, is_self_closing_tag
 
 if TYPE_CHECKING:
     from .types import HtmlAttributes
@@ -14,12 +13,12 @@ class Compiler:
         self.tokens = tokens
 
         self.depth: int = 0
-        self.stack: deque[str] = deque()
         self.token: Token | None = tokens.popleft()
         self.code: deque[str] = deque()
 
         while self.token:
             getattr(self, f"visit_{self.token.__class__.__name__}")(self.token)
+            self.move_cursor(self.token, self.peek())
             self.eat()
 
         if self.code[-1] != "\n":
@@ -33,6 +32,12 @@ class Compiler:
         except IndexError:
             self.token = None
 
+    def peek(self) -> Token | None:
+        try:
+            return self.tokens[0]
+        except IndexError:
+            return None
+
     def append(self, fragment: str) -> None:
         self.code.append(fragment)
 
@@ -42,40 +47,37 @@ class Compiler:
     def newline(self) -> None:
         self.append("\n")
 
-    def in_block(self) -> bool:
-        try:
-            return is_block_tag(self.stack[-1])
-        except IndexError:
-            return False
-
     def visit_OpeningTag(self, tag: OpeningTag) -> None:
-        if self.in_block():
-            self.newline()
-            self.indent()
-
         self.append(f"<{tag.name}{self.render_attrs(tag.attrs)}>")
-        self.stack.append(tag.name)
-
-        if is_block_tag(tag.name) and not is_self_closing_tag(tag.name):
-            self.depth += 1
 
     def visit_Content(self, content: Content) -> None:
-        if self.in_block():
-            self.newline()
-            self.indent()
-
         text = escape(content.text) if not content.safe else content.text
-
         self.append(text)
 
     def visit_ClosingTag(self, tag: ClosingTag) -> None:
-        if is_block_tag(tag.name):
-            self.depth -= 1
-            self.newline()
-            self.indent()
-
         self.append(f"</{tag.name}>")
-        self.stack.pop()
+
+    def move_cursor(self, token: Token, next_token: Token | None) -> None:
+        if not next_token:
+            return
+
+        match (token, next_token):
+            case [OpeningTag(), ClosingTag()]:
+                self.depth = self.depth
+            case [OpeningTag(), _]:
+                self.depth += 1
+            case [_, ClosingTag()]:
+                self.depth -= 1
+
+        match (token, next_token):
+            # current or next token is an opening block tag
+            case [OpeningTag(is_block=True), _] | [_, OpeningTag(is_block=True)]:
+                self.newline()
+                self.indent()
+            # current or next token is a closing block tag
+            case [ClosingTag(is_block=True), _] | [_, ClosingTag(is_block=True)]:
+                self.newline()
+                self.indent()
 
     @classmethod
     def render_attrs(cls, attrs: "HtmlAttributes") -> str:

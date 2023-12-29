@@ -129,9 +129,11 @@ class TestFormatting:
         html = render(h("span", [h("div", ["hello"])]))
         assert html == dedent(
             """\
-            <span><div>
-                hello
-            </div></span>
+            <span>
+                <div>
+                    hello
+                </div>
+            </span>
             """
         )
 
@@ -180,12 +182,35 @@ class TestFormatting:
             """
         )
 
-    def test_inline_then_text(self) -> None:
+    def test_block_inline_inline(self) -> None:
+        html = h("div", [h("span", "foo"), h("span", "bar")])
+        assert render(html) == dedent(
+            """\
+            <div>
+                <span>foo</span><span>bar</span>
+            </div>
+            """
+        )
+
+    def test_block_inline_text(self) -> None:
         html = h("div", [h("span", "foo"), "bar"])
         assert render(html) == dedent(
             """\
             <div>
                 <span>foo</span>bar
+            </div>
+            """
+        )
+
+    def test_block_following_content(self) -> None:
+        html = h("div", ["hello", h("div", "world")])
+        assert render(html) == dedent(
+            """\
+            <div>
+                hello
+                <div>
+                    world
+                </div>
             </div>
             """
         )
