@@ -20,4 +20,4 @@ jobs:
       - run: poetry run black . --check
       - run: poetry run ruff .
       - run: poetry run mypy .
-      - run: poetry run pytest --cov=python_html_dsl --cov-fail-under=100
+      - run: poetry run pytest --cov=neat_html --cov-fail-under=100

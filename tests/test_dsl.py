@@ -2,7 +2,7 @@ from textwrap import dedent
 
 import pytest
 
-from python_html_dsl import h, render, safe
+from neat_html import h, render, safe
 
 
 def test_single_tag() -> None:

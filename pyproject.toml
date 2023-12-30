@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "python-html-dsl"
+name = "neat-html"
 version = "0.1.0"
-description = "A DSL for creating HTML with Python."
+description = "A python library for writing and composing HTML."
 authors = ["Sam Dudley <dudley.co.uk@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{ include = "python_html_dsl" }]
+packages = [{ include = "neat_html" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"

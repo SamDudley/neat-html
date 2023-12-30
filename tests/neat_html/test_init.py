@@ -1,7 +1,7 @@
 import pytest
 
-from python_html_dsl import _handle_args
-from python_html_dsl.node import Node
+from neat_html import _handle_args
+from neat_html.node import Node
 
 
 class TestHandleArgs:

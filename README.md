@@ -1,12 +1,12 @@
-# python-html-dsl
+# neat-html
 
-python-html-dsl is a python library for writing and composing HTML.
+A python library for writing and composing HTML.
 
 Features:
 
 - small API to learn (2 functions)
 - fully typed API
-- produces formatted HTML
+- produces "neatly" formatted HTML
 - written in pure python
 - zero dependencies
 - comprehensive test suite
@@ -15,19 +15,18 @@ Features:
 Install using pip:
 
 ```bash
-pip install python-html-dsl
+pip install neat-html
 ```
 
 Take it for a spin:
 
 ```python
->>> from python_html_dsl import h, render
+>>> from neat_html import h, render
 >>> greeting = h("strong", {"style": {"color": "green"}}, "Hello")
 >>> html = h("p", {"id": "foo"}, [greeting, ", World!"])
 >>> print(render(html))
 <p id="foo">
-    <strong style="color: green">Hello</strong>
-    , World!
+    <strong style="color: green">Hello</strong>, World!
 </p>
 
 ```

@@ -1,4 +1,4 @@
-from python_html_dsl import h, render
+from neat_html import h, render
 
 root = h("span", "root")
 

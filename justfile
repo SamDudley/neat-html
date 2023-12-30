@@ -17,7 +17,7 @@ check:
 	poetry run mypy .
 
 test *args:
-	poetry run pytest --cov=python_html_dsl {{args}}
+	poetry run pytest --cov=neat_html {{args}}
 
 coverage:
 	poetry run coverage html

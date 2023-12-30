@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from python_html_dsl import Node, h, render
+from neat_html import Node, h, render
 
 
 def page(content: Node | Sequence[Node]) -> Node:
