@@ -5,6 +5,9 @@ description = "A python library for writing and composing HTML."
 authors = ["Sam Dudley <dudley.co.uk@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/SamDudley/neat-html"
+keywords = ["html"]
+classifiers = ["Topic :: Text Processing :: Markup :: HTML"]
 packages = [{ include = "neat_html" }]
 
 [tool.poetry.dependencies]
