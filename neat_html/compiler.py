@@ -48,7 +48,9 @@ class Compiler:
         self.append("\n")
 
     def visit_OpeningTag(self, tag: OpeningTag) -> None:
-        self.append(f"<{tag.name}{self.render_attrs(tag.attrs)}>")
+        attrs = self.render_attrs(tag.attrs)
+        attrs = " " + attrs if attrs else ""
+        self.append(f"<{tag.name}{attrs}>")
 
     def visit_Content(self, content: Content) -> None:
         text = escape(content.text) if not content.safe else content.text
@@ -84,12 +86,18 @@ class Compiler:
         if not attrs:
             return ""
         attrs_list = [cls.render_attr(k, v) for k, v in attrs.items()]
-        return " " + " ".join(attrs_list)
+        return " ".join(attrs_list)
 
     @classmethod
     def render_attr(cls, key: str, value: Any) -> str:
         if value == "":
             return key
+
+        if value is True:
+            return key
+
+        if value is False:
+            return ""
 
         if key == "style":
             if not isinstance(value, dict):

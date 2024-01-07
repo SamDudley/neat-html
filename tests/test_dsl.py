@@ -79,6 +79,16 @@ def test_empty_string_boolean_attribute() -> None:
     assert html == "<input disabled>\n"
 
 
+def test_true_boolean_attribute() -> None:
+    html = render(h("input", {"disabled": True}))
+    assert html == "<input disabled>\n"
+
+
+def test_false_boolean_attribute() -> None:
+    html = render(h("input", {"disabled": False}))
+    assert html == "<input>\n"
+
+
 def test_can_produce_doctype_tag() -> None:
     html = render(h("!DOCTYPE", {"html": ""}))
     assert html == "<!DOCTYPE html>\n"
