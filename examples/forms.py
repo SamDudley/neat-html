@@ -1,9 +1,9 @@
 from collections.abc import Sequence
 
-from neat_html import Node, h, render
+from neat_html import Element, h, render
 
 
-def page(content: Node | Sequence[Node]) -> Node:
+def page(content: Element | Sequence[Element]) -> Element:
     return h(
         "html",
         {"lang": "en"},
@@ -28,7 +28,7 @@ def page(content: Node | Sequence[Node]) -> Node:
     )
 
 
-def form(*fields: str) -> Node:
+def form(*fields: str) -> Element:
     inputs = [
         h(
             "div",
@@ -45,7 +45,7 @@ def form(*fields: str) -> Node:
     return h("form", [*inputs, h("button", "Submit")])
 
 
-def field(name: str, id: str, label: str, type: str) -> list[Node]:
+def field(name: str, id: str, label: str, type: str) -> list[Element]:
     return [
         h("label", {"for": id}, label),
         h("input", {"name": name, "type": type, id: "id"}),

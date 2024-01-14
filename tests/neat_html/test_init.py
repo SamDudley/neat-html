@@ -1,7 +1,7 @@
 import pytest
 
 from neat_html import _handle_args
-from neat_html.node import Node
+from neat_html.node import Element
 
 
 class TestHandleArgs:
@@ -22,7 +22,7 @@ class TestHandleArgs:
         assert _handle_args("div", "hello") == ("div", {}, ["hello"])
 
     def test_2_args_str_and_node(self) -> None:
-        node = Node("div")
+        node = Element("div")
         assert _handle_args("div", node) == ("div", {}, [node])
 
     def test_3_args_str_dict_list(self) -> None:
@@ -34,7 +34,7 @@ class TestHandleArgs:
         assert args == ("div", {"a": 1}, ["hello"])
 
     def test_3_args_str_dict_node(self) -> None:
-        node = Node("div")
+        node = Element("div")
         args = _handle_args("div", {"a": 1}, node)
         assert args == ("div", {"a": 1}, [node])
 

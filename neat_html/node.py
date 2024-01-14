@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 Children = list["NodeType"]
 
 
-class Node:
+class Element:
     def __init__(
         self,
         tag: str,
@@ -31,4 +31,4 @@ class TextNode:
         self.safe = safe
 
 
-NodeType = Node | TextNode
+NodeType = Element | TextNode

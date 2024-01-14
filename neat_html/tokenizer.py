@@ -1,6 +1,6 @@
 from collections import deque
 
-from .node import Children, Node, NodeType, TextNode
+from .node import Children, Element, NodeType, TextNode
 from .tokens import ClosingTag, Content, OpeningTag, Token
 
 
@@ -10,7 +10,7 @@ class Tokenizer:
         self.tokens: deque[Token] = deque()
         self.open_nodes: set[NodeType] = set()
 
-    def tokenize(self, root_node: Node) -> deque[Token]:
+    def tokenize(self, root_node: Element) -> deque[Token]:
         self.nodes.append(root_node)
 
         while self.nodes:
