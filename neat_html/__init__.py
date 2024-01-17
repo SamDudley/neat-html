@@ -53,12 +53,11 @@ def h(*args: Any) -> Element:
     3 args - tag, attrs, and children
     """
     tag, attrs, children = _handle_args(*args)
-    node = Element(tag, attrs, children)
-    return node
+    return Element(tag, attrs, children)
 
 
-def render(node: Element) -> str:
-    tokens = Tokenizer().tokenize(node)
+def render(element: Element) -> str:
+    tokens = Tokenizer().tokenize(element)
     return Compiler().compile(tokens)
 
 

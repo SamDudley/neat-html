@@ -1,12 +1,12 @@
 from collections import deque
 from html import escape
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from .tokens import ClosingTag, Content, OpeningTag, Token
 from .types import SafeString
 
 if TYPE_CHECKING:
-    from .types import HtmlAttributes
+    from .types import HtmlAttributes, HtmlAttributeValue
 
 
 class Compiler:
@@ -94,7 +94,7 @@ class Compiler:
         return " ".join(attrs_list)
 
     @classmethod
-    def render_attr(cls, key: str, value: Any) -> str:
+    def render_attr(cls, key: str, value: "HtmlAttributeValue") -> str:
         if value == "":
             return key
 
