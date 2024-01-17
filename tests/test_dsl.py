@@ -224,3 +224,13 @@ class TestFormatting:
             </div>
             """
         )
+
+    def test_block_self_closing(self) -> None:
+        html = h("div", h("input"))
+        assert render(html) == dedent(
+            """\
+            <div>
+                <input>
+            </div>
+            """
+        )
