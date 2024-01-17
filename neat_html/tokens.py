@@ -1,5 +1,5 @@
 from .types import HtmlAttributes
-from .utils import is_block_tag
+from .utils import is_block_tag, is_self_closing_tag
 
 
 class Token:
@@ -15,6 +15,10 @@ class OpeningTag(Token):
     @property
     def is_block(self) -> bool:
         return is_block_tag(self.name)
+
+    @property
+    def is_self_closing(self) -> bool:
+        return is_self_closing_tag(self.name)
 
     def __repr__(self) -> str:
         return f"OpeningTag({self.name!r}, {self.attrs!r})"

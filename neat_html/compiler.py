@@ -64,9 +64,9 @@ class Compiler:
             return
 
         match (token, next_token):
-            case [OpeningTag(), ClosingTag()]:
+            case [OpeningTag(is_self_closing=False), ClosingTag()]:
                 self.depth = self.depth
-            case [OpeningTag(), _]:
+            case [OpeningTag(is_self_closing=False), _]:
                 self.depth += 1
             case [_, ClosingTag()]:
                 self.depth -= 1
