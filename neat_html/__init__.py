@@ -1,10 +1,9 @@
 from collections.abc import Sequence
-from typing import Any, Union, overload
+from typing import Any, overload
 
 from .compiler import Compiler
-from .node import Element, NodeType, TextNode
 from .tokenizer import Tokenizer
-from .types import Children, HtmlAttributes
+from .types import Element, HtmlAttributes, SafeString
 
 __all__ = ["h", "render", "safe", "Element"]
 
@@ -29,7 +28,7 @@ def h(
 @overload
 def h(
     tag: str,
-    children: Sequence[NodeType | str] | NodeType | str,
+    children: Sequence[Element | str] | Element | str,
     /,
 ) -> Element:
     ...  # pragma: no cover
@@ -39,7 +38,7 @@ def h(
 def h(
     tag: str,
     attrs: HtmlAttributes,
-    children: Sequence[NodeType | str] | NodeType | str,
+    children: Sequence[Element | str] | Element | str,
     /,
 ) -> Element:
     ...  # pragma: no cover
@@ -54,10 +53,7 @@ def h(*args: Any) -> Element:
     3 args - tag, attrs, and children
     """
     tag, attrs, children = _handle_args(*args)
-    node_children: Children = [
-        TextNode(child) if isinstance(child, str) else child for child in children
-    ]
-    node = Element(tag, attrs, node_children)
+    node = Element(tag, attrs, children)
     return node
 
 
@@ -66,29 +62,29 @@ def render(node: Element) -> str:
     return Compiler().compile(tokens)
 
 
-def safe(text: str) -> TextNode:
-    return TextNode(text, safe=True)
+def safe(string: str) -> SafeString:
+    return SafeString(string)
 
 
-def _handle_args(
-    *args: Any,
-) -> tuple[str, "HtmlAttributes", list[Union["Element", str]] | str]:
+def _handle_args(*args: Any) -> tuple[str, HtmlAttributes, list[Element | str]]:
     match args:
+        # 1: h("p")
         case [str()]:
             return args[0], {}, []
+        # 2: h("p", {"color": "red"})
         case [str(), dict()]:
             return args[0], args[1], []
+        # 2: h("p", [...])
         case [str(), list()]:
             return args[0], {}, args[1]
-        case [str(), Element() | TextNode()]:
+        # 2: h("p", h("p")) OR h("p", "foo")
+        case [str(), Element() | str()]:
             return args[0], {}, [args[1]]
-        case [str(), str()]:
-            return args[0], {}, [args[1]]
+        # 3: h("p", {"color": "red"}, [...])
         case [str(), dict(), list()]:
             return args[0], args[1], args[2]
-        case [str(), dict(), Element() | TextNode()]:
-            return args[0], args[1], [args[2]]
-        case [str(), dict(), str()]:
+        # 3: h("p", {"color": "red"}, h("p")) OR h("p", {"color": "red"}, "foo")
+        case [str(), dict(), Element() | str()]:
             return args[0], args[1], [args[2]]
         case _:
             raise ValueError("Invalid arguments")

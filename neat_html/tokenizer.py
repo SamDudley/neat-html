@@ -1,14 +1,14 @@
 from collections import deque
 
-from .node import Children, Element, NodeType, TextNode
 from .tokens import ClosingTag, Content, OpeningTag, Token
+from .types import Children, Element, ElementOrString
 
 
 class Tokenizer:
     def __init__(self) -> None:
-        self.nodes: deque[NodeType] = deque()
+        self.nodes: deque[ElementOrString] = deque()
         self.tokens: deque[Token] = deque()
-        self.open_nodes: set[NodeType] = set()
+        self.open_nodes: set[ElementOrString] = set()
 
     def tokenize(self, root_node: Element) -> deque[Token]:
         self.nodes.append(root_node)
@@ -16,9 +16,9 @@ class Tokenizer:
         while self.nodes:
             node = self.nodes[-1]
 
-            if isinstance(node, TextNode):
+            if isinstance(node, str):
                 self.nodes.pop()
-                self.add_token(Content(node.text, safe=node.safe))
+                self.add_token(Content(node))
 
             else:  # Node
                 if node not in self.open_nodes:

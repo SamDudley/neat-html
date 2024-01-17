@@ -1,7 +1,7 @@
 import pytest
 
 from neat_html import _handle_args
-from neat_html.node import Element
+from neat_html.types import Element
 
 
 class TestHandleArgs:

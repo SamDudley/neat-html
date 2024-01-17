@@ -3,6 +3,7 @@ from html import escape
 from typing import TYPE_CHECKING, Any
 
 from .tokens import ClosingTag, Content, OpeningTag, Token
+from .types import SafeString
 
 if TYPE_CHECKING:
     from .types import HtmlAttributes
@@ -53,8 +54,12 @@ class Compiler:
         self.append(f"<{tag.name}{attrs}>")
 
     def visit_Content(self, content: Content) -> None:
-        text = escape(content.text) if not content.safe else content.text
-        self.append(text)
+        string = (
+            content.string
+            if isinstance(content.string, SafeString)
+            else escape(content.string)
+        )
+        self.append(string)
 
     def visit_ClosingTag(self, tag: ClosingTag) -> None:
         self.append(f"</{tag.name}>")

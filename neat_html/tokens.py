@@ -25,12 +25,11 @@ class OpeningTag(Token):
 
 
 class Content(Token):
-    def __init__(self, text: str, *, safe: bool = False):
-        self.text = text
-        self.safe = safe
+    def __init__(self, string: str):
+        self.string = string
 
     def __repr__(self) -> str:
-        return f"Content({self.text!r}, {self.safe!r})"
+        return f"Content({self.string!r})"
 
 
 class ClosingTag(Token):
