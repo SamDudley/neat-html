@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neat-html"
-version = "0.2.0"
+version = "0.3.0"
 description = "A python library for writing and composing HTML."
 authors = ["Sam Dudley <dudley.co.uk@gmail.com>"]
 license = "MIT"
