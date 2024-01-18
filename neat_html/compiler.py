@@ -1,11 +1,12 @@
 from collections import deque
 from html import escape
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from .tokens import ClosingTag, Content, OpeningTag, Token
+from .types import SafeString
 
 if TYPE_CHECKING:
-    from .types import HtmlAttributes
+    from .types import HtmlAttributes, HtmlAttributeValue
 
 
 class Compiler:
@@ -53,8 +54,12 @@ class Compiler:
         self.append(f"<{tag.name}{attrs}>")
 
     def visit_Content(self, content: Content) -> None:
-        text = escape(content.text) if not content.safe else content.text
-        self.append(text)
+        string = (
+            content.string
+            if isinstance(content.string, SafeString)
+            else escape(content.string)
+        )
+        self.append(string)
 
     def visit_ClosingTag(self, tag: ClosingTag) -> None:
         self.append(f"</{tag.name}>")
@@ -89,7 +94,7 @@ class Compiler:
         return " ".join(attrs_list)
 
     @classmethod
-    def render_attr(cls, key: str, value: Any) -> str:
+    def render_attr(cls, key: str, value: "HtmlAttributeValue") -> str:
         if value == "":
             return key
 

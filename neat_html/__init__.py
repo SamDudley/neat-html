@@ -1,19 +1,18 @@
 from collections.abc import Sequence
-from typing import Any, Union, overload
+from typing import Any, overload
 
 from .compiler import Compiler
-from .node import Node, NodeType, TextNode
 from .tokenizer import Tokenizer
-from .types import Children, HtmlAttributes
+from .types import Element, HtmlAttributes, SafeString
 
-__all__ = ["h", "render", "safe", "Node"]
+__all__ = ["h", "render", "safe", "Element", "SafeString"]
 
 
 @overload
 def h(
     tag: str,
     /,
-) -> Node:
+) -> Element:
     ...  # pragma: no cover
 
 
@@ -22,16 +21,16 @@ def h(
     tag: str,
     attrs: HtmlAttributes,
     /,
-) -> Node:
+) -> Element:
     ...  # pragma: no cover
 
 
 @overload
 def h(
     tag: str,
-    children: Sequence[NodeType | str] | NodeType | str,
+    children: Sequence[Element | str] | Element | str,
     /,
-) -> Node:
+) -> Element:
     ...  # pragma: no cover
 
 
@@ -39,13 +38,13 @@ def h(
 def h(
     tag: str,
     attrs: HtmlAttributes,
-    children: Sequence[NodeType | str] | NodeType | str,
+    children: Sequence[Element | str] | Element | str,
     /,
-) -> Node:
+) -> Element:
     ...  # pragma: no cover
 
 
-def h(*args: Any) -> Node:
+def h(*args: Any) -> Element:
     """
     Used for building html using python functions.
 
@@ -54,41 +53,37 @@ def h(*args: Any) -> Node:
     3 args - tag, attrs, and children
     """
     tag, attrs, children = _handle_args(*args)
-    node_children: Children = [
-        TextNode(child) if isinstance(child, str) else child for child in children
-    ]
-    node = Node(tag, attrs, node_children)
-    return node
+    return Element(tag, attrs, children)
 
 
-def render(node: Node) -> str:
-    tokens = Tokenizer().tokenize(node)
+def render(element: Element) -> str:
+    tokens = Tokenizer().tokenize(element)
     return Compiler().compile(tokens)
 
 
-def safe(text: str) -> TextNode:
-    return TextNode(text, safe=True)
+def safe(string: str) -> SafeString:
+    return SafeString(string)
 
 
-def _handle_args(
-    *args: Any,
-) -> tuple[str, "HtmlAttributes", list[Union["Node", str]] | str]:
+def _handle_args(*args: Any) -> tuple[str, HtmlAttributes, list[Element | str]]:
     match args:
+        # 1: h("")
         case [str()]:
             return args[0], {}, []
+        # 2: h("", {})
         case [str(), dict()]:
             return args[0], args[1], []
+        # 2: h("", [])
         case [str(), list()]:
             return args[0], {}, args[1]
-        case [str(), Node() | TextNode()]:
+        # 2: h("", h("")) OR h("", "")
+        case [str(), Element() | str()]:
             return args[0], {}, [args[1]]
-        case [str(), str()]:
-            return args[0], {}, [args[1]]
+        # 3: h("", {}, [])
         case [str(), dict(), list()]:
             return args[0], args[1], args[2]
-        case [str(), dict(), Node() | TextNode()]:
-            return args[0], args[1], [args[2]]
-        case [str(), dict(), str()]:
+        # 3: h("", {}, h("")) OR h("", {}, "")
+        case [str(), dict(), Element() | str()]:
             return args[0], args[1], [args[2]]
         case _:
             raise ValueError("Invalid arguments")
