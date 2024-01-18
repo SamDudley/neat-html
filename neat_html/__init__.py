@@ -5,7 +5,7 @@ from .compiler import Compiler
 from .tokenizer import Tokenizer
 from .types import Element, HtmlAttributes, SafeString
 
-__all__ = ["h", "render", "safe", "Element"]
+__all__ = ["h", "render", "safe", "Element", "SafeString"]
 
 
 @overload
@@ -67,22 +67,22 @@ def safe(string: str) -> SafeString:
 
 def _handle_args(*args: Any) -> tuple[str, HtmlAttributes, list[Element | str]]:
     match args:
-        # 1: h("p")
+        # 1: h("")
         case [str()]:
             return args[0], {}, []
-        # 2: h("p", {"color": "red"})
+        # 2: h("", {})
         case [str(), dict()]:
             return args[0], args[1], []
-        # 2: h("p", [...])
+        # 2: h("", [])
         case [str(), list()]:
             return args[0], {}, args[1]
-        # 2: h("p", h("p")) OR h("p", "foo")
+        # 2: h("", h("")) OR h("", "")
         case [str(), Element() | str()]:
             return args[0], {}, [args[1]]
-        # 3: h("p", {"color": "red"}, [...])
+        # 3: h("", {}, [])
         case [str(), dict(), list()]:
             return args[0], args[1], args[2]
-        # 3: h("p", {"color": "red"}, h("p")) OR h("p", {"color": "red"}, "foo")
+        # 3: h("", {}, h("")) OR h("", {}, "")
         case [str(), dict(), Element() | str()]:
             return args[0], args[1], [args[2]]
         case _:
