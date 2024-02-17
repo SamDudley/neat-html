@@ -56,8 +56,11 @@ def h(*args: Any) -> Element:
     return Element(tag, attrs, children)
 
 
-def render(element: Element) -> str:
-    tokens = Tokenizer().tokenize(element)
+def render(elements: Element | Sequence[Element]) -> str:
+    if isinstance(elements, Element):
+        elements = [elements]
+
+    tokens = Tokenizer().tokenize(elements)
     return Compiler().compile(tokens)
 
 

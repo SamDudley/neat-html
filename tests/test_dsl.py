@@ -94,6 +94,16 @@ def test_can_produce_doctype_tag() -> None:
     assert html == "<!DOCTYPE html>\n"
 
 
+def test_can_render_multiple_root_elements() -> None:
+    html = render(
+        [
+            h("span"),
+            h("span"),
+        ]
+    )
+    assert html == "<span></span><span></span>\n"
+
+
 class TestFormatting:
     def test_block(self) -> None:
         html = render(h("div", ["hello"]))
