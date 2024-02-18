@@ -52,7 +52,7 @@ def test_style_empty_dict() -> None:
     assert html == '<div style="">\n</div>\n'
 
 
-def test_unsafe_text() -> None:
+def test_safe_content_is_not_escaped() -> None:
     html = render(h("div", safe("<script>alert(1)</script>")))
     assert html == dedent(
         """\
@@ -63,12 +63,22 @@ def test_unsafe_text() -> None:
     )
 
 
-def test_safe_text() -> None:
+def test_content_is_escaped() -> None:
     html = render(h("div", "<script>alert(1)</script>"))
     assert html == dedent(
         """\
         <div>
             &lt;script&gt;alert(1)&lt;/script&gt;
+        </div>
+        """
+    )
+
+
+def test_attributes_are_escaped() -> None:
+    html = render(h("div", {"id": "<script>alert(1)</script>"}))
+    assert html == dedent(
+        """\
+        <div id="&lt;script&gt;alert(1)&lt;/script&gt;">
         </div>
         """
     )
