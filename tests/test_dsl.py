@@ -97,11 +97,11 @@ def test_can_produce_doctype_tag() -> None:
 def test_can_render_multiple_root_elements() -> None:
     html = render(
         [
-            h("span"),
-            h("span"),
+            h("span", "1"),
+            h("span", "2"),
         ]
     )
-    assert html == "<span></span><span></span>\n"
+    assert html == "<span>1</span><span>2</span>\n"
 
 
 class TestFormatting:
