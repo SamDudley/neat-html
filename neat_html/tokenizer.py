@@ -12,7 +12,8 @@ class Tokenizer:
         self.open_nodes: set[ElementOrString] = set()
 
     def tokenize(self, root_node: Sequence[Element]) -> deque[Token]:
-        self.nodes.extend(root_node)
+        # TODO: Use `add_children` when types are fixed.
+        self.nodes.extend(reversed(root_node))
 
         while self.nodes:
             node = self.nodes[-1]
