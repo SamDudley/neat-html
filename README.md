@@ -4,7 +4,7 @@ A python library for writing and composing HTML.
 
 Features:
 
-- small API to learn (2 functions)
+- small API to learn
 - fully typed API (strict mypy)
 - produces "neatly" formatted HTML
 - written in pure python
@@ -27,9 +27,7 @@ print(render(html))
 Output:
 
 ```html
-<p id="foo">
-    <strong style="color: green">Hello</strong>, World!
-</p>
+<p id="foo"><strong style="color: green">Hello</strong>, World!</p>
 ```
 
 ## Installation
@@ -57,7 +55,6 @@ uv pip install neat-html
 ### Basics
 
 ```python
-# import the library
 from neat_html import Element, h, render
 
 # define an element
