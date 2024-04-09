@@ -27,7 +27,9 @@ print(render(html))
 Output:
 
 ```html
-<p id="foo"><strong style="color: green">Hello</strong>, World!</p>
+<p id="foo">
+    <strong style="color: green">Hello</strong>, World!
+</p>
 ```
 
 ## Installation
