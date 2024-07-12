@@ -12,8 +12,7 @@ __all__ = ["h", "render", "safe", "Element", "SafeString"]
 def h(
     tag: str,
     /,
-) -> Element:
-    ...  # pragma: no cover
+) -> Element: ...  # pragma: no cover
 
 
 @overload
@@ -21,8 +20,7 @@ def h(
     tag: str,
     attrs: HtmlAttributes,
     /,
-) -> Element:
-    ...  # pragma: no cover
+) -> Element: ...  # pragma: no cover
 
 
 @overload
@@ -30,8 +28,7 @@ def h(
     tag: str,
     children: Sequence[Element | str] | Element | str,
     /,
-) -> Element:
-    ...  # pragma: no cover
+) -> Element: ...  # pragma: no cover
 
 
 @overload
@@ -40,8 +37,7 @@ def h(
     attrs: HtmlAttributes,
     children: Sequence[Element | str] | Element | str,
     /,
-) -> Element:
-    ...  # pragma: no cover
+) -> Element: ...  # pragma: no cover
 
 
 def h(*args: Any) -> Element:

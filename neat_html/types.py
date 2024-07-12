@@ -4,8 +4,7 @@ from .utils import is_self_closing_tag
 
 
 class SupportsStr(Protocol):
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...
 
 
 HtmlAttributeValue = bool | SupportsStr
@@ -30,5 +29,4 @@ class Element:
         return is_self_closing_tag(self.tag)
 
 
-class SafeString(str):
-    ...
+class SafeString(str): ...
