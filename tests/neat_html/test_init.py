@@ -41,3 +41,7 @@ class TestHandleArgs:
     def test_4_args(self) -> None:
         with pytest.raises(TypeError):
             _handle_args("div", {}, [], [])  # type: ignore
+
+    def test_invalid_arg(self) -> None:
+        with pytest.raises(ValueError):
+            _handle_args("div", "div", [])
