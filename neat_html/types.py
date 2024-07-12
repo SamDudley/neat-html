@@ -1,14 +1,8 @@
-from typing import Protocol, Union
+from typing import Union
 
 from .utils import is_self_closing_tag
 
-
-class SupportsStr(Protocol):
-    def __str__(self) -> str: ...
-
-
-HtmlAttributeValue = bool | SupportsStr
-HtmlAttributes = dict[str, HtmlAttributeValue]
+HtmlAttributes = dict[str, object]
 ElementOrString = Union["Element", str]
 Children = list[ElementOrString]
 
