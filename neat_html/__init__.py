@@ -3,7 +3,7 @@ from typing import overload
 
 from .compiler import Compiler
 from .tokenizer import Tokenizer
-from .types import Element, HtmlAttributes, SafeString
+from .types import Element, HtmlAttributes, HtmlChild, HtmlChildren, SafeString
 
 __all__ = ["h", "render", "safe", "Element", "SafeString"]
 
@@ -26,7 +26,7 @@ def h(
 @overload
 def h(
     tag: str,
-    children: Sequence[Element | str] | Element | str,
+    children: HtmlChildren,
     /,
 ) -> Element: ...  # pragma: no cover
 
@@ -35,17 +35,15 @@ def h(
 def h(
     tag: str,
     attrs: HtmlAttributes,
-    children: Sequence[Element | str] | Element | str,
+    children: HtmlChildren,
     /,
 ) -> Element: ...  # pragma: no cover
 
 
 def h(
     tag: str,
-    attrs_or_children: (
-        HtmlAttributes | Sequence[Element | str] | Element | str | None
-    ) = None,
-    children: Sequence[Element | str] | Element | str | None = None,
+    attrs_or_children: HtmlAttributes | HtmlChildren | None = None,
+    children: HtmlChildren | None = None,
     /,
 ) -> Element:
     """
@@ -73,12 +71,10 @@ def safe(string: str) -> SafeString:
 
 def _handle_args(
     tag: str,
-    attrs_or_children: (
-        HtmlAttributes | Sequence[Element | str] | Element | str | None
-    ) = None,
-    children: Sequence[Element | str] | Element | str | None = None,
+    attrs_or_children: HtmlAttributes | HtmlChildren | None = None,
+    children: HtmlChildren | None = None,
     /,
-) -> tuple[str, HtmlAttributes, list[Element | str]]:
+) -> tuple[str, HtmlAttributes, list[HtmlChild]]:
     args = (tag, attrs_or_children, children)
     match args:
         # 1: h("")

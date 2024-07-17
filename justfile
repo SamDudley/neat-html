@@ -11,6 +11,8 @@ format:
 	poetry run black .
 	poetry run ruff check . --fix
 
+fix: format
+
 check:
 	poetry run black . --check
 	poetry run ruff check .

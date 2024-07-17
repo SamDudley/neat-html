@@ -1,10 +1,11 @@
+from collections.abc import Sequence
 from typing import Union
 
 from .utils import is_self_closing_tag
 
 HtmlAttributes = dict[str, object]
-ElementOrString = Union["Element", str]
-Children = list[ElementOrString]
+HtmlChild = Union["Element", str]
+HtmlChildren = Sequence[HtmlChild] | HtmlChild
 
 
 class Element:
@@ -12,7 +13,7 @@ class Element:
         self,
         tag: str,
         attrs: HtmlAttributes | None = None,
-        children: Children | None = None,
+        children: list[HtmlChild] | None = None,
     ):
         self.tag = tag
         self.attrs = attrs or {}
