@@ -9,11 +9,13 @@ publish:
 
 format:
 	poetry run black .
-	poetry run ruff . --fix
+	poetry run ruff check . --fix
+
+fix: format
 
 check:
 	poetry run black . --check
-	poetry run ruff .
+	poetry run ruff check .
 	poetry run mypy .
 
 test *args:

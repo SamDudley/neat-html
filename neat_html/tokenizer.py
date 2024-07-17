@@ -2,18 +2,17 @@ from collections import deque
 from collections.abc import Sequence
 
 from .tokens import ClosingTag, Content, OpeningTag, Token
-from .types import Children, Element, ElementOrString
+from .types import Element, HtmlChild
 
 
 class Tokenizer:
     def __init__(self) -> None:
-        self.nodes: deque[ElementOrString] = deque()
+        self.nodes: deque[HtmlChild] = deque()
         self.tokens: deque[Token] = deque()
-        self.open_nodes: set[ElementOrString] = set()
+        self.open_nodes: set[HtmlChild] = set()
 
-    def tokenize(self, root_node: Sequence[Element]) -> deque[Token]:
-        # TODO: Use `add_children` when types are fixed.
-        self.nodes.extend(reversed(root_node))
+    def tokenize(self, root_nodes: Sequence[Element]) -> deque[Token]:
+        self.add_children(root_nodes)
 
         while self.nodes:
             node = self.nodes[-1]
@@ -40,7 +39,7 @@ class Tokenizer:
 
         return self.tokens
 
-    def add_children(self, children: Children) -> None:
+    def add_children(self, children: Sequence[HtmlChild]) -> None:
         self.nodes.extend(reversed(children))
 
     def add_token(self, token: Token) -> None:

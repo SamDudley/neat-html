@@ -6,7 +6,7 @@ from .tokens import ClosingTag, Content, OpeningTag, Token
 from .types import SafeString
 
 if TYPE_CHECKING:
-    from .types import HtmlAttributes, HtmlAttributeValue
+    from .types import HtmlAttributes
 
 
 class Compiler:
@@ -94,7 +94,7 @@ class Compiler:
         return " ".join(attrs_list)
 
     @classmethod
-    def render_attr(cls, key: str, value: "HtmlAttributeValue") -> str:
+    def render_attr(cls, key: str, value: object) -> str:
         if value == "":
             return key
 

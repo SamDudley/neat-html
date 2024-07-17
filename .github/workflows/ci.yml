@@ -18,6 +18,6 @@ jobs:
       - run: pip install poetry
       - run: poetry install
       - run: poetry run black . --check
-      - run: poetry run ruff .
+      - run: poetry run ruff check .
       - run: poetry run mypy .
       - run: poetry run pytest --cov=neat_html --cov-fail-under=100

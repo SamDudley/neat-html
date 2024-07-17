@@ -6,8 +6,8 @@ from neat_html.types import Element
 
 class TestHandleArgs:
     def test_0_args(self) -> None:
-        with pytest.raises(ValueError):
-            _handle_args()
+        with pytest.raises(TypeError):
+            _handle_args()  # type: ignore
 
     def test_1_arg_str(self) -> None:
         assert _handle_args("div") == ("div", {}, [])
@@ -39,5 +39,9 @@ class TestHandleArgs:
         assert args == ("div", {"a": 1}, [element])
 
     def test_4_args(self) -> None:
+        with pytest.raises(TypeError):
+            _handle_args("div", {}, [], [])  # type: ignore
+
+    def test_invalid_arg(self) -> None:
         with pytest.raises(ValueError):
-            _handle_args("div", {}, [], [])
+            _handle_args("div", "div", [])
