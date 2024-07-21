@@ -4,6 +4,9 @@ import pytest
 
 from neat_html import h, render, safe
 
+HTML_SCRIPT = "<script>alert(1)</script>"
+HTML_SCRIPT_ESCAPED = "&lt;script&gt;alert(1)&lt;/script&gt;"
+
 
 def test_single_tag() -> None:
     html = render(h("div", {}, []))
@@ -74,14 +77,32 @@ def test_content_is_escaped() -> None:
     )
 
 
+def test_attribute_value_can_be_not_str() -> None:
+    html = render(h("input", {"tabindex": 0}))
+    assert html == '<input tabindex="0">\n'
+
+
 def test_attributes_are_escaped() -> None:
-    html = render(h("div", {"id": "<script>alert(1)</script>"}))
-    assert html == dedent(
-        """\
-        <div id="&lt;script&gt;alert(1)&lt;/script&gt;">
-        </div>
-        """
+    html = render(h("h1", {"class": HTML_SCRIPT}))
+    assert html == f'<h1 class="{HTML_SCRIPT_ESCAPED}"></h1>\n'
+
+
+def test_style_attributes_are_escaped() -> None:
+    html = render(h("h1", {"style": {"color": HTML_SCRIPT}}))
+    assert html == f'<h1 style="color: {HTML_SCRIPT_ESCAPED}"></h1>\n'
+
+
+def test_safe_attribute_value_is_not_escaped() -> None:
+    html = render(h("h1", {"style": {"color": safe(HTML_SCRIPT)}}))
+    assert html == f'<h1 style="color: {HTML_SCRIPT}"></h1>\n'
+
+
+def test_attribute_escaping_can_be_turned_off_with_option() -> None:
+    html = render(
+        h("h1", {"style": {"color": safe(HTML_SCRIPT)}}),
+        escape_attributes=False,
     )
+    assert html == f'<h1 style="color: {HTML_SCRIPT}"></h1>\n'
 
 
 def test_empty_string_boolean_attribute() -> None:
