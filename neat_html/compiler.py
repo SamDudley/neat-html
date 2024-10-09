@@ -1,6 +1,6 @@
 from collections import deque
-from html import escape
-from typing import TYPE_CHECKING
+from html import escape as html_escape
+from typing import TYPE_CHECKING, TypedDict, Unpack
 
 from .tokens import ClosingTag, Content, OpeningTag, Token
 from .types import SafeString
@@ -9,7 +9,14 @@ if TYPE_CHECKING:
     from .types import HtmlAttributes
 
 
+class CompilerOptions(TypedDict):
+    escape_attributes: bool
+
+
 class Compiler:
+    def __init__(self, **options: Unpack[CompilerOptions]) -> None:
+        self.options = options
+
     def compile(self, tokens: deque[Token]) -> str:
         self.tokens = tokens
 
@@ -54,11 +61,7 @@ class Compiler:
         self.append(f"<{tag.name}{attrs}>")
 
     def visit_Content(self, content: Content) -> None:
-        string = (
-            content.string
-            if isinstance(content.string, SafeString)
-            else escape(content.string)
-        )
+        string = self.escape(content.string)
         self.append(string)
 
     def visit_ClosingTag(self, tag: ClosingTag) -> None:
@@ -86,15 +89,13 @@ class Compiler:
                 self.newline()
                 self.indent()
 
-    @classmethod
-    def render_attrs(cls, attrs: "HtmlAttributes") -> str:
+    def render_attrs(self, attrs: "HtmlAttributes") -> str:
         if not attrs:
             return ""
-        attrs_list = [cls.render_attr(k, v) for k, v in attrs.items()]
+        attrs_list = [self.render_attr(k, v) for k, v in attrs.items()]
         return " ".join(attrs_list)
 
-    @classmethod
-    def render_attr(cls, key: str, value: object) -> str:
+    def render_attr(self, key: str, value: object) -> str:
         if value == "":
             return key
 
@@ -108,13 +109,26 @@ class Compiler:
             if not isinstance(value, dict):
                 raise ValueError("A style value must be a dict")
 
-            return f'{key}="{cls.render_style(value)}"'
-        # Default
-        return f'{key}="{value}"'
+            return f'{key}="{self.render_style(value)}"'
 
-    @classmethod
-    def render_style(cls, style: dict[str, str]) -> str:
+        # Default
+        return f'{key}="{self.render_attr_value(value)}"'
+
+    def render_style(self, style: dict[str, str]) -> str:
         if not style:
             return ""
-        style_list = [f"{k}: {v}" for k, v in style.items()]
+        style_list = [f"{k}: {self.render_attr_value(v)}" for k, v in style.items()]
         return "; ".join(style_list)
+
+    def render_attr_value(self, value: object) -> str:
+        if self.options["escape_attributes"] is False:
+            return str(value)
+
+        if not isinstance(value, (str, SafeString)):
+            value = str(value)
+
+        return self.escape(value)
+
+    @staticmethod
+    def escape(string: str) -> str:
+        return string if isinstance(string, SafeString) else html_escape(string)
