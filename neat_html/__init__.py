@@ -57,12 +57,16 @@ def h(
     return Element(tag, attrs, children)
 
 
-def render(elements: Element | Sequence[Element]) -> str:
+def render(
+    elements: Element | Sequence[Element],
+    *,
+    escape_attributes: bool = True,
+) -> str:
     if isinstance(elements, Element):
         elements = [elements]
 
     tokens = Tokenizer().tokenize(elements)
-    return Compiler().compile(tokens)
+    return Compiler(escape_attributes=escape_attributes).compile(tokens)
 
 
 def safe(string: str) -> SafeString:
