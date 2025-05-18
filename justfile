@@ -28,3 +28,6 @@ view-coverage:
 	poetry run python -m webbrowser -t "htmlcov/index.html"
 
 test-cov: test coverage view-coverage
+
+perf:
+	poetry run python -m timeit -s "from examples.perf import neat_html" "neat_html()"
